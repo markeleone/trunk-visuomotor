@@ -68,6 +68,19 @@ def crop_image(image, left_pct, right_pct, top_pct, bottom_pct):
 
     return cropped_image
 
+# use for val and test set
+def crop_and_resize(image_path, output_dir):
+    image = cv2.imread(image_path)
+    base_name = os.path.basename(image_path)
+    name, ext = os.path.splitext(base_name)
+    # crop image to relevant region
+    image = crop_image(image, left_pct=0.08, right_pct=0.05, top_pct=0, bottom_pct=0)
+ 
+    # Resize image ( we want default to be 1080x1080)
+    image = resize_image(image)
+    cv2.imwrite(os.path.join(output_dir, f"{name}{ext}"), image)
+
+# use for training set only
 def augment_image(image_path, output_dir):
     image = cv2.imread(image_path)
     # print(image_path)
@@ -81,7 +94,7 @@ def augment_image(image_path, output_dir):
 
     # Resize image ( we want default to be 1080x1080)
     image = resize_image(image)
-    cv2.imwrite(os.path.join(output_dir+"/images/", f"{name}{ext}"), image)
+    cv2.imwrite(os.path.join(output_dir, f"{name}{ext}"), image)
 
     # Random hue adjustment
     hue_factor = random.randint(-15, 15)
@@ -92,4 +105,7 @@ def augment_image(image_path, output_dir):
     value_adjusted_image = adjust_value(hue_adjusted_image, value_factor)
 
     # Save augmented image and adjusted bounding boxes
-    cv2.imwrite(os.path.join(output_dir+"/images/", f"{name}_augmented{ext}"), value_adjusted_image)
+    cv2.imwrite(os.path.join(output_dir, f"{name}_augmented{ext}"), value_adjusted_image)
+
+    # return augmented filename
+    return f"{name}_augmented{ext}"
