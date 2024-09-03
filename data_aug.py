@@ -77,6 +77,7 @@ def augment_image(image_path, output_dir):
 
     # crop image to relevant region
     image = crop_image(image, left_pct=0.08, right_pct=0.05, top_pct=0, bottom_pct=0)
+    # print(image.shape) #uncomment to see image size before scaling
 
     # Resize image ( we want default to be 1080x1080)
     image = resize_image(image)
